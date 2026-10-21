@@ -1,15 +1,24 @@
-# Лабораторные работы по ОС UNIX
+# Лабораторная №3. Жёсткие ссылки
 
-Студент: Понеделько Михаил Павлович  
-Группа: 932420
+Программа обходит каталог с подкаталогами, считает SHA-256 через OpenSSL и заменяет файлы с одинаковым хэшем жёсткими ссылками. Символьные ссылки пропускаются. Внешние программы из кода не вызываются.
 
-[Задания курса](https://marigostra.ru/materials/unix.html).
+Сборка и запуск в Ubuntu:
 
-Каждая работа находится в отдельной ветке:
+```sh
+g++ -std=c++17 -Wall -Wextra main.cpp -o duplicates -lcrypto
+./duplicates /путь/к/каталогу
+```
 
-- [lab01 — скрипт для сборки](https://github.com/MihailPonedelko/unix.ponedelko.mikhail.932420.labs/tree/lab01).
-- [lab02 — конкурентный контейнер](https://github.com/MihailPonedelko/unix.ponedelko.mikhail.932420.labs/tree/lab02).
-- [lab03 — жёсткие ссылки](https://github.com/MihailPonedelko/unix.ponedelko.mikhail.932420.labs/tree/lab03).
-- [lab04 — горизонтально масштабируемый сервис](https://github.com/MihailPonedelko/unix.ponedelko.mikhail.932420.labs/tree/lab04).
+Для проверки можно создать два одинаковых файла:
 
-Команды сборки и запуска приведены в README соответствующей ветки.
+```sh
+mkdir -p /tmp/lab03-example/sub
+printf 'hello\n' > /tmp/lab03-example/a.txt
+cp /tmp/lab03-example/a.txt /tmp/lab03-example/sub/b.txt
+./duplicates /tmp/lab03-example
+ls -li /tmp/lab03-example/a.txt /tmp/lab03-example/sub/b.txt
+```
+
+После запуска у файлов одинаковый inode и число ссылок 2. Каталог должен находиться в одной файловой системе. Для проверки в WSL удобно использовать `/tmp`.
+
+[Задание](https://marigostra.ru/materials/unix.html)
