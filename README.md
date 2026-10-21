@@ -1,15 +1,18 @@
-# Лабораторные работы по ОС UNIX
+# Лабораторная 1. Скрипт для сборки
 
-Студент: Понеделько Михаил Павлович  
-Группа: 932420
+`main.c` вызывает функцию сложения из `sum.c`. Имя программы берётся из комментария `// Output: sum` в первом файле.
 
-[Задания курса](https://marigostra.ru/materials/unix.html).
+Запуск в Ubuntu из этой папки:
 
-Каждая работа находится в отдельной ветке:
+```sh
+sh build.sh main.c sum.c
+./sum
+```
 
-- [lab01 — скрипт для сборки](https://github.com/MihailPonedelko/unix.ponedelko.mikhail.932420.labs/tree/lab01).
-- [lab02 — конкурентный контейнер](https://github.com/MihailPonedelko/unix.ponedelko.mikhail.932420.labs/tree/lab02).
-- [lab03 — жёсткие ссылки](https://github.com/MihailPonedelko/unix.ponedelko.mikhail.932420.labs/tree/lab03).
-- [lab04 — горизонтально масштабируемый сервис](https://github.com/MihailPonedelko/unix.ponedelko.mikhail.932420.labs/tree/lab04).
+Результат: `5`.
 
-Команды сборки и запуска приведены в README соответствующей ветки.
+Скрипт копирует переданные C-файлы в каталог `mktemp`, собирает их через GCC и переносит результат к первому исходнику. `trap` удаляет временный каталог при завершении и сигналах HUP, INT, QUIT, PIPE, TERM. SIGKILL обработать нельзя.
+
+Коды завершения: 0 — успех, 1 — неверные аргументы или недоступный исходник, 2 — неверный комментарий Output, 3 — ошибка компиляции, 4 — ошибка временного каталога или копирования. Для сигналов: 129, 130, 131, 141, 143 соответственно.
+
+[Задание](https://marigostra.ru/materials/unix.html), [оболочка и скрипты](https://marigostra.ru/materials/presentation-unix-lab01.pdf), [GCC и сборка](https://marigostra.ru/materials/presentation-unix-lab02.pdf).
