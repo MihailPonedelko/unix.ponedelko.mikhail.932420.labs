@@ -1,0 +1,26 @@
+services:
+  broker:
+    image: rabbitmq:4-management
+    environment:
+      RABBITMQ_DEFAULT_USER: unix
+      RABBITMQ_DEFAULT_PASS: unix
+    healthcheck:
+      test: ["CMD", "gosu", "rabbitmq", "rabbitmq-diagnostics", "-q", "check_running"]
+      interval: 5s
+      timeout: 10s
+      start_period: 30s
+      retries: 12
+  controller:
+    build: .
+    command: ["node", "controller.js"]
+    ports:
+      - "127.0.0.1:3000:3000"
+    depends_on:
+      broker:
+        condition: service_healthy
+  worker:
+    build: .
+    command: ["node", "worker.js"]
+    depends_on:
+      broker:
+        condition: service_healthy

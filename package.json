@@ -1,0 +1,7 @@
+{
+  "name": "unix-lab04",
+  "version": "1.0.0",
+  "dependencies": {
+    "amqplib": "2.2.0"
+  }
+}
