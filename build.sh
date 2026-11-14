@@ -13,7 +13,7 @@ for source in "$@"; do
 done
 
 directory=$(cd -- "$(dirname -- "$1")" && pwd) || exit 1
-output=$(sed -n 's|^[[:space:]]*//[[:space:]]*Output:[[:space:]]*\([^[:space:]]*\)[[:space:]]*$|\1|p' "$1" | head -n 1)
+output=$(awk '$1 == "//" && $2 == "Output:" && NF == 3 {print $3; exit}' "$1")
 case "$output" in
     ''|.|..|*/*|-*)
         echo "Invalid or missing Output comment" >&2
@@ -48,7 +48,7 @@ trap 'exit 143' TERM
 temporary=$(mktemp -d) || exit 4
 cp -- "$@" "$temporary/" || exit 4
 cd -- "$temporary" || exit 4
-gcc -Wall -Wextra ./*.c -o "$output" &
+TMPDIR="$temporary" gcc -Wall -Wextra ./*.c -o "$output" &
 compiler=$!
 wait "$compiler"
 status=$?
