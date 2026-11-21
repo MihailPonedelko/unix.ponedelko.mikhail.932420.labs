@@ -1,0 +1,8 @@
+services:
+  worker:
+    build: .
+    volumes:
+      - shared:/shared
+
+volumes:
+  shared:
